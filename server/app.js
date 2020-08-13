@@ -29,7 +29,7 @@ io.on('connection', socket => {
       return cb('Текст не может быть пустым')
     }
 
-    const user = users.get(socket.id)
+    const user = users.get(data.id)
     if (user) {
       io.to(user.room).emit('newMessage', m(user.name, data.text, data.id))
     } 
