@@ -3,12 +3,12 @@ class Users {
         this.users = []
     }
 
-    add(user) {
+    add (user) {
         this.users.push(user)
     }
 
-    get(id) {
-        this.users.find(user => user.id === id)
+    get (id) {
+        return this.users.find(user => user.id === id)
     }
 
     remove(id) {

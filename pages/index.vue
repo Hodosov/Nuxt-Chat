@@ -55,7 +55,6 @@ import {mapMutations} from 'vuex'
 
           this.$socket.emit('userJoined', user, data => {
             if(typeof data === 'string') {
-              console.log(data)
             } else {
               user.id = data.userId
               this.setUser(user)
@@ -67,5 +66,3 @@ import {mapMutations} from 'vuex'
     },
   }
 </script>
-
-

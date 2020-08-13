@@ -6,14 +6,12 @@ const users = require('./users')()
 const m = (name, text, id) => ({ name, text, id })
 
 io.on('connection', socket => {
-  console.log('IO Connected')
   socket.on('userJoined', (data, cb) => {
     if (!data.name || !data.room) {
       return cd('Данные не корректны')
     }
     socket.join(data.room)
-
-    users.remove(socket.id)
+    // users.remove(socket.id)
     users.add({
       id: socket.id,
       name: data.name,
@@ -31,10 +29,10 @@ io.on('connection', socket => {
       return cb('Текст не может быть пустым')
     }
 
-    const user = users.get(data.id)
+    const user = users.get(socket.id)
     if (user) {
       io.to(user.room).emit('newMessage', m(user.name, data.text, data.id))
-    }
+    } 
     cb()
   })
 })
