@@ -11,7 +11,7 @@ io.on('connection', socket => {
       return cd('Данные не корректны')
     }
     socket.join(data.room)
-    // users.remove(socket.id)
+    users.remove(socket.id)
     users.add({
       id: socket.id,
       name: data.name,
@@ -19,6 +19,8 @@ io.on('connection', socket => {
     })
 
     cb({ userId: socket.id })
+    io.to(data.room).emit('updateUsers', users.getByRoom(data.room))
+    console.log('users: ', users)
     socket.emit('newMessage', m('admin', `Добро пожаловать ${data.name}`))
     socket.broadcast.to(data.room)
       .emit('newMessage', m('admin', `Пользователь ${data.name} зашел`))
@@ -34,6 +36,22 @@ io.on('connection', socket => {
       io.to(user.room).emit('newMessage', m(user.name, data.text, data.id))
     } 
     cb()
+  })
+
+  socket.on('userLeft', (id, cb) => {
+    const user = users.remove(id)
+    if(user) {
+      io.to(user.room).emit('updateUsers', users.getByRoom(user.room))
+      io.to(user.room).emit('newMessage', m('admin',`${user.name} покинул беседу`))
+    }
+    cb()
+  })
+  socket.on('disconnect', () => {
+    const user = users.remove(socket.id)
+    if(user) {
+      io.to(user.room).emit('updateUsers', users.getByRoom(user.room))
+      io.to(user.room).emit('newMessage', m('admin',`${user.name} покинул беседу`))
+    }
   })
 })
 

@@ -22,7 +22,7 @@ class Users {
     }
 
     getByRoom(room) {
-        return this.users.filter(user => this.users.room === room)
+        return this.users.filter(user => user.room === room)
     }
 }
 

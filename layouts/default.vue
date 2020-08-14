@@ -5,15 +5,15 @@
     <v-list subheader>
       <v-subheader>Собеседники</v-subheader>
       <div
-        v-for="item in items"
-        :key="item.title"
+        v-for="u in users"
+        :key="u.name + 2"
         @click.prevent
          class="mx-auto"
           min-width="600">
         <div class="mes-card">
-          <div v-text="item.title"></div>
+          <div>{{u.name}}</div>
            <div>
-          <v-icon :color="item.id === 2 ? 'deep-purple accent-4' : 'grey'">chat_bubble</v-icon>
+          <v-icon :color="u.id === user.id ? 'primary' : 'grey'">chat_bubble</v-icon>
         </div>
         </div>
       </div>
@@ -40,17 +40,16 @@ import {mapState, mapMutations} from 'vuex'
 export default {
   data: () => ({
     drawer: true,
-     items: [
-        { active: true, title: 'Jason Oner', id: 1},
-        { active: true, title: 'Ranee Carlson', id: 2},
-      ],
   }),
-  computed: mapState(['user']),
+  computed: mapState(['user', 'users']),
   methods: {
     ...mapMutations(['clearData']),
     exit() {
-      this.$router.push('/?message=leftChat')
-      this.clearData()
+      this.$socket.emit('userLeft', this.user.id, () => {
+          this.$router.push('/?message=leftChat')
+          this.clearData()
+      })
+     
     }
   }
 }
