@@ -49,7 +49,6 @@ export default {
           this.$router.push('/?message=leftChat')
           this.clearData()
       })
-     
     }
   }
 }
